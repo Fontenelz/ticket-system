@@ -27,21 +27,31 @@ export function TicketsTable({
   selectedId,
   compact,
   query,
+  activeView,
   onQueryChange,
   onSelect,
   onOpenSidebar,
+  onNewTicket,
 }: {
   tickets: Ticket[]
   selectedId: string | null
   compact: boolean
   query: string
+  activeView: string
   onQueryChange: (value: string) => void
   onSelect: (ticket: Ticket) => void
   onOpenSidebar: () => void
+  onNewTicket: () => void
 }) {
   return (
     <div className="flex h-full min-w-0 flex-1 flex-col bg-card">
-      <TicketFilters query={query} onQueryChange={onQueryChange} onOpenSidebar={onOpenSidebar} />
+      <TicketFilters
+        query={query}
+        activeView={activeView}
+        onQueryChange={onQueryChange}
+        onOpenSidebar={onOpenSidebar}
+        onNewTicket={onNewTicket}
+      />
 
       <ScrollArea className="min-h-0 flex-1">
         <Table>
