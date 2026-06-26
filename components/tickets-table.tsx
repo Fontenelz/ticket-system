@@ -64,6 +64,7 @@ export function TicketsTable({
               <TableHead>Título</TableHead>
               {!compact && <TableHead className="w-40">Categoria</TableHead>}
               <TableHead className="w-28">Status</TableHead>
+              {!compact && <TableHead className="w-44">Responsável</TableHead>}
               {!compact && <TableHead className="w-32">Data</TableHead>}
               <TableHead className="w-10" />
             </TableRow>

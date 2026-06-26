@@ -3,6 +3,7 @@
 import { cn } from "@/lib/utils"
 import { TableCell, TableRow } from "@/components/ui/table"
 import { Checkbox } from "@/components/ui/checkbox"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { StatusBadge, PriorityFlag } from "@/components/ticket-badges"
 import { ChevronRight } from "lucide-react"
 import type { Ticket } from "@/lib/tickets-data"
@@ -47,6 +48,17 @@ export function TicketRow({
       <TableCell>
         <StatusBadge status={ticket.status} />
       </TableCell>
+      {!compact && (
+        <TableCell>
+          <div className="flex items-center gap-2">
+            <Avatar className="size-6 shrink-0">
+              <AvatarImage src={ticket.assignee.avatar || "/placeholder.svg"} alt={ticket.assignee.name} />
+              <AvatarFallback className="text-xs">{ticket.assignee.name.charAt(0)}</AvatarFallback>
+            </Avatar>
+            <span className="truncate text-sm text-muted-foreground">{ticket.assignee.name}</span>
+          </div>
+        </TableCell>
+      )}
       {!compact && (
         <TableCell className="text-muted-foreground tabular-nums">{ticket.date}</TableCell>
       )}
