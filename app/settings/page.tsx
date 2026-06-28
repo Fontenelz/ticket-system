@@ -1,10 +1,10 @@
-import { StubPage } from "@/components/stub-page"
+import { AppLayout } from "@/components/app-layout"
+import { SettingsView } from "@/components/views/settings-view"
 
 export default function SettingsPage() {
   return (
-    <StubPage
-      title="Configurações"
-      description="Personalize o sistema de tickets, gerencie equipes, perfis de acesso, integrações e preferências do workspace."
-    />
+    <AppLayout>
+      <SettingsView />
+    </AppLayout>
   )
 }

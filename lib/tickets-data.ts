@@ -1,142 +1,255 @@
-export type TicketStatus = "New" | "Open" | "Pending" | "Resolved" | "Escalated"
+export type TicketStatus = "Resolved" | "Open" | "In Progress" | "Failed"
+export type TicketPriority = "Critical" | "High" | "Medium" | "Low"
 export type TicketCategory =
-  | "Billing"
-  | "Technical Issue"
-  | "Account & Login"
-  | "Subscription"
-  | "Other"
-export type TicketPriority = "Urgent" | "High" | "Medium" | "Low"
+  | "Security"
+  | "Frontend"
+  | "Backend"
+  | "Database"
+  | "Devops"
 
-export type TimelineEvent = {
+export interface Ticket {
   id: string
-  type: "created" | "assigned" | "ai" | "status" | "comment"
-  title: string
-  time: string
-}
-
-export type Ticket = {
-  id: string
-  code: string
-  title: string
-  category: TicketCategory
-  status: TicketStatus
-  priority: TicketPriority
-  date: string
-  customer: {
-    name: string
-    email: string
-    avatar: string
-    verified: boolean
-  }
+  ticketId: string
+  subject: string
   assignee: {
     name: string
     avatar: string
   }
-  summary: string
-  confidence: number
-  resolution: { label: string; done: boolean }[]
-  references: { code: string; title: string }[]
-  timeline: TimelineEvent[]
-}
-
-const avatars = {
-  brenda: "/avatar-woman-portrait.png",
-  john: "/avatar-man-portrait.png",
-  sara: "/avatar-woman-glasses.png",
-  mike: "/avatar-man-beard.png",
-}
-
-const priorityByIndex: TicketPriority[] = ["Urgent", "High", "Medium", "Low"]
-
-const baseTitles: {
-  title: string
   category: TicketCategory
+  priority: TicketPriority
   status: TicketStatus
-}[] = [
-  { title: "Payment charged twice", category: "Billing", status: "Open" },
-  { title: "Unable to reset password", category: "Account & Login", status: "Pending" },
-  { title: "App crashes on checkout", category: "Technical Issue", status: "Escalated" },
-  { title: "Invoice not downloadable", category: "Billing", status: "Resolved" },
-  { title: "Subscription auto-renewed unexpectedly", category: "Subscription", status: "Open" },
-  { title: "Email verification link expired", category: "Account & Login", status: "Pending" },
-  { title: "Slow loading dashboard", category: "Technical Issue", status: "Open" },
-  { title: "Refund request for last month", category: "Billing", status: "Pending" },
-  { title: "Cannot change payment method", category: "Subscription", status: "Open" },
-  { title: "Error 500 when exporting data", category: "Technical Issue", status: "Escalated" },
-  { title: "Subscription auto-renewed unexpectedly", category: "Subscription", status: "Resolved" },
-  { title: "App crashes on checkout", category: "Technical Issue", status: "Resolved" },
-  { title: "Payment charged twice", category: "Billing", status: "Resolved" },
-  { title: "Error 500 when exporting data", category: "Technical Issue", status: "Resolved" },
-  { title: "Subscription auto-renewed unexpectedly", category: "Subscription", status: "Resolved" },
-  { title: "Refund request for last month", category: "Billing", status: "Resolved" },
-  { title: "Slow loading dashboard", category: "Technical Issue", status: "Resolved" },
-  { title: "Cannot change payment method", category: "Subscription", status: "Resolved" },
-]
+  description: string
+  createdAt: string
+  updatedAt: string
+}
 
-const customers = [
-  { name: "Brenda Kim", email: "brendakim@gmail.com", avatar: avatars.brenda, verified: true },
-  { name: "Lucas Reis", email: "lucas.reis@outlook.com", avatar: avatars.mike, verified: false },
-  { name: "Sara Lopes", email: "sara.lopes@gmail.com", avatar: avatars.sara, verified: true },
-]
+const assignee = {
+  name: "Olivia Rhye",
+  avatar: "/avatar-olivia.png",
+}
 
-const assignees = [
-  { name: "John Doe", avatar: avatars.john },
-  { name: "Mike Ross", avatar: avatars.mike },
-  { name: "Sara Lima", avatar: avatars.sara },
-]
-
-export const tickets: Ticket[] = baseTitles.map((base, i) => {
-  const num = 981 + i
-  const customer = customers[i % customers.length]
-  const assignee = assignees[i % assignees.length]
-  return {
-    id: `t-${num}`,
-    code: `AV-${num}`,
-    title: base.title,
-    category: base.category,
-    status: base.status,
-    priority: priorityByIndex[i % priorityByIndex.length],
-    date: `Jun ${((i % 27) + 1).toString().padStart(2, "0")}, 2026`,
-    customer,
+export const tickets: Ticket[] = [
+  {
+    id: "1",
+    ticketId: "TRG-001",
+    subject: "Critical Authentication Vulnerability",
     assignee,
-    summary:
-      base.category === "Billing"
-        ? "Customer was charged twice for the same transaction on their credit card."
-        : "Customer reported an issue that requires investigation and a follow-up response.",
-    confidence: 78 + ((i * 3) % 20),
-    resolution: [
-      { label: "Verify the duplicate transaction in system.", done: true },
-      { label: "Check if both charges were processed successfully.", done: false },
-      { label: "Initiate refund for the duplicate charge.", done: false },
-      { label: "Send confirmation email with refund timeline.", done: false },
-    ],
-    references: [
-      { code: "KB-3041", title: "Duplicate Payment Handling" },
-      { code: "KB-1872", title: "Refund Process" },
-    ],
-    timeline: [
-      { id: "e1", type: "assigned", title: `Assigned to ${assignee.name}`, time: "Today, 10:45 AM" },
-      { id: "e2", type: "ai", title: "AI generated summary and resolution", time: "Today, 10:32 AM" },
-      { id: "e3", type: "created", title: `Ticket created by ${customer.name}`, time: "Today, 10:30 AM" },
-    ],
-  }
-})
-
-export const views: { label: string; status: TicketStatus | "All"; count: number }[] = [
-  { label: "All Tickets", status: "All", count: 1036 },
-  { label: "New", status: "New", count: 52 },
-  { label: "Open", status: "Open", count: 291 },
-  { label: "Pending", status: "Pending", count: 89 },
-  { label: "Resolved", status: "Resolved", count: 526 },
-  { label: "Escalated", status: "Escalated", count: 78 },
+    category: "Security",
+    priority: "Critical",
+    status: "Resolved",
+    description:
+      "A critical vulnerability was found in the authentication flow allowing session tokens to be reused after logout. Patched by rotating tokens on every sign-out event.",
+    createdAt: "Jan 12, 2025",
+    updatedAt: "Jan 14, 2025",
+  },
+  {
+    id: "2",
+    ticketId: "TRG-002",
+    subject: "Search Functionality Broken",
+    assignee,
+    category: "Frontend",
+    priority: "Critical",
+    status: "Failed",
+    description:
+      "Global search returns empty results for valid queries. The debounce handler is throwing an unhandled exception on special characters.",
+    createdAt: "Jan 11, 2025",
+    updatedAt: "Jan 13, 2025",
+  },
+  {
+    id: "3",
+    ticketId: "TRG-003",
+    subject: "Dashboard Loading Performance",
+    assignee,
+    category: "Frontend",
+    priority: "High",
+    status: "Open",
+    description:
+      "The dashboard takes over 6 seconds to load on first paint. Investigating bundle size and unnecessary re-renders on the widgets grid.",
+    createdAt: "Jan 10, 2025",
+    updatedAt: "Jan 12, 2025",
+  },
+  {
+    id: "4",
+    ticketId: "TRG-004",
+    subject: "API Rate Limiting Issues",
+    assignee,
+    category: "Backend",
+    priority: "Medium",
+    status: "In Progress",
+    description:
+      "Clients are intermittently hitting rate limits even under normal usage. Reviewing the sliding window implementation in the gateway.",
+    createdAt: "Jan 9, 2025",
+    updatedAt: "Jan 11, 2025",
+  },
+  {
+    id: "5",
+    ticketId: "TRG-005",
+    subject: "Mobile Responsive Layout Bug",
+    assignee,
+    category: "Frontend",
+    priority: "Low",
+    status: "Failed",
+    description:
+      "The settings page overflows horizontally on viewports below 360px. Caused by a fixed-width table that does not collapse.",
+    createdAt: "Jan 8, 2025",
+    updatedAt: "Jan 10, 2025",
+  },
+  {
+    id: "6",
+    ticketId: "TRG-006",
+    subject: "Database Connection Pool Exhaustion",
+    assignee,
+    category: "Devops",
+    priority: "Critical",
+    status: "Resolved",
+    description:
+      "Connection pool was exhausted during peak traffic. Increased pool size and added connection reaping for idle sessions.",
+    createdAt: "Jan 7, 2025",
+    updatedAt: "Jan 9, 2025",
+  },
+  {
+    id: "7",
+    ticketId: "TRG-007",
+    subject: "Email Notification Delays",
+    assignee,
+    category: "Backend",
+    priority: "Low",
+    status: "In Progress",
+    description:
+      "Transactional emails are delayed by up to 20 minutes. The queue worker is backing up due to a slow third-party provider.",
+    createdAt: "Jan 6, 2025",
+    updatedAt: "Jan 8, 2025",
+  },
+  {
+    id: "8",
+    ticketId: "TRG-008",
+    subject: "SSL Certificate Expiry Alert",
+    assignee,
+    category: "Devops",
+    priority: "Medium",
+    status: "Resolved",
+    description:
+      "SSL certificate for the marketing subdomain is expiring in 7 days. Automated renewal via the ACME client.",
+    createdAt: "Jan 5, 2025",
+    updatedAt: "Jan 7, 2025",
+  },
+  {
+    id: "9",
+    ticketId: "TRG-009",
+    subject: "Form Validation Error Messages",
+    assignee,
+    category: "Frontend",
+    priority: "Critical",
+    status: "Resolved",
+    description:
+      "Validation messages are not announced to screen readers. Added aria-live regions and associated error text with inputs.",
+    createdAt: "Jan 4, 2025",
+    updatedAt: "Jan 6, 2025",
+  },
+  {
+    id: "10",
+    ticketId: "TRG-010",
+    subject: "Memory Leak in Background Jobs",
+    assignee,
+    category: "Backend",
+    priority: "Medium",
+    status: "In Progress",
+    description:
+      "Worker processes grow unbounded over 24 hours. Tracing retained references in the scheduled report generator.",
+    createdAt: "Jan 3, 2025",
+    updatedAt: "Jan 5, 2025",
+  },
+  {
+    id: "11",
+    ticketId: "TRG-011",
+    subject: "Critical Authentication Vulnerability",
+    assignee,
+    category: "Database",
+    priority: "High",
+    status: "Resolved",
+    description:
+      "Follow-up hardening on the auth service to enforce short-lived refresh tokens and device binding.",
+    createdAt: "Jan 2, 2025",
+    updatedAt: "Jan 4, 2025",
+  },
+  {
+    id: "12",
+    ticketId: "TRG-012",
+    subject: "Dashboard Loading Performance",
+    assignee,
+    category: "Frontend",
+    priority: "High",
+    status: "Open",
+    description:
+      "Second pass on dashboard performance focused on lazy loading charts and memoizing expensive selectors.",
+    createdAt: "Jan 1, 2025",
+    updatedAt: "Jan 3, 2025",
+  },
+  {
+    id: "13",
+    ticketId: "TRG-013",
+    subject: "API Rate Limiting Issues",
+    assignee,
+    category: "Backend",
+    priority: "Low",
+    status: "Resolved",
+    description:
+      "Added per-key burst allowances and clearer 429 responses with Retry-After headers.",
+    createdAt: "Dec 30, 2024",
+    updatedAt: "Jan 1, 2025",
+  },
+  {
+    id: "14",
+    ticketId: "TRG-014",
+    subject: "Mobile Responsive Layout Bug",
+    assignee,
+    category: "Database",
+    priority: "Medium",
+    status: "In Progress",
+    description:
+      "Navigation drawer overlaps content on tablet breakpoints. Reworking the z-index stacking context.",
+    createdAt: "Dec 29, 2024",
+    updatedAt: "Dec 31, 2024",
+  },
+  {
+    id: "15",
+    ticketId: "TRG-015",
+    subject: "Critical Authentication Vulnerability",
+    assignee,
+    category: "Database",
+    priority: "Critical",
+    status: "Open",
+    description:
+      "Reported CSRF gap on a legacy endpoint. Adding same-site cookie enforcement and origin checks.",
+    createdAt: "Dec 28, 2024",
+    updatedAt: "Dec 30, 2024",
+  },
+  {
+    id: "16",
+    ticketId: "TRG-016",
+    subject: "Database Connection Pool Exhaustion",
+    assignee,
+    category: "Database",
+    priority: "Low",
+    status: "Resolved",
+    description:
+      "Added monitoring dashboards and alerts for connection saturation to prevent recurrence.",
+    createdAt: "Dec 27, 2024",
+    updatedAt: "Dec 29, 2024",
+  },
 ]
 
 export const categories: TicketCategory[] = [
-  "Billing",
-  "Technical Issue",
-  "Account & Login",
-  "Subscription",
-  "Other",
+  "Security",
+  "Frontend",
+  "Backend",
+  "Database",
+  "Devops",
 ]
-
-export const priorities: TicketPriority[] = ["Urgent", "High", "Medium", "Low"]
+export const priorities: TicketPriority[] = ["Critical", "High", "Medium", "Low"]
+export const statuses: TicketStatus[] = [
+  "Resolved",
+  "Open",
+  "In Progress",
+  "Failed",
+]

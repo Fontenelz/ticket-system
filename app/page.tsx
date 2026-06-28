@@ -1,5 +1,10 @@
-import { TicketsPage } from "@/components/tickets-page"
+import { AppLayout } from "@/components/app-layout"
+import { DashboardView } from "@/components/dashboard-view"
 
 export default function Page() {
-  return <TicketsPage />
+  return (
+    <AppLayout>
+      <DashboardView />
+    </AppLayout>
+  )
 }

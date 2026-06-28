@@ -1,10 +1,10 @@
-import { StubPage } from "@/components/stub-page"
+import { AppLayout } from "@/components/app-layout"
+import { IntegrationsView } from "@/components/views/integrations-view"
 
 export default function IntegrationsPage() {
   return (
-    <StubPage
-      title="Integrações"
-      description="Conecte o sistema com ferramentas externas como Slack, Jira, Zendesk e APIs de terceiros."
-    />
+    <AppLayout>
+      <IntegrationsView />
+    </AppLayout>
   )
 }

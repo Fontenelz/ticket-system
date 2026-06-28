@@ -1,13 +1,18 @@
 import { cn } from "@/lib/utils"
-import { Flag } from "lucide-react"
 import type { TicketPriority, TicketStatus } from "@/lib/tickets-data"
 
 const statusStyles: Record<TicketStatus, string> = {
-  New: "bg-violet-50 text-violet-700",
-  Open: "bg-emerald-50 text-emerald-700",
-  Pending: "bg-amber-50 text-amber-700",
-  Resolved: "bg-sky-50 text-sky-700",
-  Escalated: "bg-rose-50 text-rose-700",
+  Resolved: "border-emerald-500/30 bg-emerald-500/10 text-emerald-400",
+  Open: "border-amber-500/30 bg-amber-500/10 text-amber-400",
+  "In Progress": "border-blue-500/30 bg-blue-500/10 text-blue-400",
+  Failed: "border-rose-500/30 bg-rose-500/10 text-rose-400",
+}
+
+const priorityStyles: Record<TicketPriority, string> = {
+  Critical: "text-rose-400",
+  High: "text-amber-400",
+  Medium: "text-blue-400",
+  Low: "text-emerald-400",
 }
 
 export function StatusBadge({
@@ -20,7 +25,7 @@ export function StatusBadge({
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium",
+        "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium",
         statusStyles[status],
         className,
       )}
@@ -30,19 +35,16 @@ export function StatusBadge({
   )
 }
 
-const priorityColors: Record<TicketPriority, string> = {
-  Urgent: "text-rose-500 fill-rose-500",
-  High: "text-amber-500 fill-amber-500",
-  Medium: "text-yellow-500 fill-yellow-500",
-  Low: "text-emerald-500 fill-emerald-500",
-}
-
-export function PriorityFlag({
+export function PriorityLabel({
   priority,
   className,
 }: {
   priority: TicketPriority
   className?: string
 }) {
-  return <Flag className={cn("size-4", priorityColors[priority], className)} aria-hidden />
+  return (
+    <span className={cn("text-sm font-medium", priorityStyles[priority], className)}>
+      {priority}
+    </span>
+  )
 }
